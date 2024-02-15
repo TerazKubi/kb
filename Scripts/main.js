@@ -4,33 +4,54 @@ const button = document.querySelector("#btn")
 const textArea = document.querySelector("#default")
 
 window.onload = async ()=>{
-    initTextArea()
+    await initTextArea()
+    
     const data = await fetchData()
     // displayData(data.data)
     console.log(window.innerWidth)
+
+    
 }
 
 
 function initTextArea(){
-    tinymce.init({
-        selector: 'textarea#default',
-        width: window.innerWidth,
-        height: 700,
-        plugins:[
-            'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
-            'searchreplace', 'wordcount', 'visualblocks', 'code', 'fullscreen', 'insertdatetime', 'media', 
-            'table', 'emoticons', 'template', 'codesample'
-        ],
-        toolbar: 'undo redo | styles | bold italic underline | alignleft aligncenter alignright alignjustify |' + 
-        'bullist numlist outdent indent | link image | print preview media fullscreen | ' +
-        'forecolor backcolor emoticons',
-        menu: {
-            favs: {title: 'menu', items: 'code visualaid | searchreplace | emoticons'}
-        },
-        menubar: 'favs file edit view insert format tools table',
-        content_style: 'body{font-family:Helvetica,Arial,sans-serif; font-size:16px}',
-        branding: false
-    });
+    return new Promise((res, rej) => {
+        tinymce.init({
+            selector: 'textarea#default',
+            width: window.innerWidth,
+            height: 700,
+            plugins:[
+                'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
+                'searchreplace', 'wordcount', 'visualblocks', 'code', 'fullscreen', 'insertdatetime', 'media', 
+                'table', 'emoticons', 'template', 'codesample'
+            ],
+            toolbar: 'undo redo | styles | bold italic underline | alignleft aligncenter alignright alignjustify |' + 
+            'bullist numlist outdent indent | link image | print preview fullscreen | ' +
+            'forecolor backcolor emoticons',
+            menu: {
+                favs: {title: 'menu', items: 'code visualaid | searchreplace | emoticons'}
+            },
+            menubar: 'favs file edit view insert format tools table',
+            content_style: 'body{font-family:Helvetica,Arial,sans-serif; font-size:16px}',
+            branding: false,
+            setup: function (editor) {
+                // Add init event listener
+                editor.on('init', function () {
+                    console.log('TinyMCE initialized. HTML is in the DOM.');
+                  
+                  // You can perform additional actions after initialization here
+                    const toDelete = document.querySelector(".tox-promotion")
+                    console.log(toDelete)
+                    toDelete.remove()
+                });
+            }
+        });
+        res()
+    })
+    
+
+    
+    // toDelete.style.display = 'none'
 }
 
 
@@ -75,7 +96,12 @@ button.addEventListener('click', () => {
     //     }
         
     // output.innerHTML = contentFromTextarea;
-    copyContent()
+
+    const toDelete = document.querySelector(".tox-promotion")
+    console.log(toDelete)
+
+
+    // copyContent()
 })
 
 function copyContent() {
