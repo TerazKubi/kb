@@ -2,13 +2,15 @@ const mainContainer = document.querySelector(".main-container")
 const output = document.querySelector(".output")
 const button = document.querySelector("#btn")
 const textArea = document.querySelector("#default")
+const addNoteButton = document.querySelector("#addButton")
+const newNoteContainer = document.querySelector(".blackBg")
 
 window.onload = async ()=>{
-    await initTextArea()
+    // await initTextArea()
     
     const data = await fetchData()
-    // displayData(data.data)
-    console.log(window.innerWidth)
+    displayData(data.data)
+    // console.log(window.innerWidth)
 
     
 }
@@ -17,8 +19,8 @@ window.onload = async ()=>{
 function initTextArea(){
     return new Promise((res, rej) => {
         tinymce.init({
-            selector: 'textarea#default',
-            width: window.innerWidth,
+            selector: 'textarea#textArea',
+            width: 'inherit',
             height: 700,
             plugins:[
                 'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
@@ -26,8 +28,7 @@ function initTextArea(){
                 'table', 'emoticons', 'template', 'codesample'
             ],
             toolbar: 'undo redo | styles | bold italic underline | alignleft aligncenter alignright alignjustify |' + 
-            'bullist numlist outdent indent | link image | print preview fullscreen | ' +
-            'forecolor backcolor emoticons',
+            'bullist numlist outdent indent | link image codesample | forecolor backcolor emoticons | fullscreen |',
             menu: {
                 favs: {title: 'menu', items: 'code visualaid | searchreplace | emoticons'}
             },
@@ -39,7 +40,7 @@ function initTextArea(){
                 editor.on('init', function () {
                     console.log('TinyMCE initialized. HTML is in the DOM.');
                   
-                  // You can perform additional actions after initialization here
+                  
                     const toDelete = document.querySelector(".tox-promotion")
                     console.log(toDelete)
                     toDelete.remove()
@@ -79,29 +80,34 @@ document.getElementById('downloadButton').addEventListener('click', async functi
     document.body.removeChild(downloadLink);
 });
 
-button.addEventListener('click', () => {
+// button.addEventListener('click', () => {
     
-    // var contentFromTextarea = tinyMCE.activeEditor.getContent();
+//     // var contentFromTextarea = tinyMCE.activeEditor.getContent();
     
     
-    // // Include stylesheets in the output div
-    // var stylesheets = document.styleSheets;
-    // console.log(stylesheets)
-    // for (var i = 0; i < stylesheets.length; i++) {
-    //         var stylesheet = stylesheets[i];
-    //         var link = document.createElement('link');
-    //         link.rel = 'stylesheet';
-    //         link.href = stylesheet.href;
-    //         output.appendChild(link);
-    //     }
+//     // // Include stylesheets in the output div
+//     // var stylesheets = document.styleSheets;
+//     // console.log(stylesheets)
+//     // for (var i = 0; i < stylesheets.length; i++) {
+//     //         var stylesheet = stylesheets[i];
+//     //         var link = document.createElement('link');
+//     //         link.rel = 'stylesheet';
+//     //         link.href = stylesheet.href;
+//     //         output.appendChild(link);
+//     //     }
         
-    // output.innerHTML = contentFromTextarea;
+//     // output.innerHTML = contentFromTextarea;
 
-    const toDelete = document.querySelector(".tox-promotion")
-    console.log(toDelete)
+//     const toDelete = document.querySelector(".tox-promotion")
+//     console.log(toDelete)
 
 
-    // copyContent()
+//     copyContent()
+// })
+
+addNoteButton.addEventListener('click', async () => {
+    await showAddNewNote()
+    await initTextArea()
 })
 
 function copyContent() {
@@ -173,3 +179,50 @@ function displayData(data){
     });
 }
 
+function showAddNewNote(){
+    return new Promise((resolve, reject) => {
+        const containerBG = document.createElement('div')
+        containerBG.classList.add('blackBg')
+
+        const container = document.createElement('div')
+        container.classList.add('addNewNoteContainer')
+        
+        const navBar = document.createElement('div')
+        navBar.classList.add('addNewNote-navbar')
+
+        const closeAddNote = document.createElement('div')
+        closeAddNote.classList.add('addNewNote-close')
+
+        closeAddNote.addEventListener('click', () => {
+            containerBG.remove()
+        })
+
+        const titleInputContainer = document.createElement('div')
+        titleInputContainer.classList.add('titleInputContainer')
+        titleInputContainer.innerHTML = "<input type='text'/>" 
+
+        const tagsInputContainer = document.createElement('div')
+        tagsInputContainer.classList.add('tagsInputContainer')  
+        tagsInputContainer.innerHTML = "<input type='text'/>"
+
+        const textAreaContainer = document.createElement('div')
+        textAreaContainer.classList.add('textAreaContainer')
+
+        const textArea = document.createElement('textarea')
+        textArea.setAttribute('id', 'textArea')
+
+        textAreaContainer.appendChild(textArea)
+        
+        navBar.appendChild(closeAddNote)
+        container.appendChild(titleInputContainer)
+        container.appendChild(tagsInputContainer)
+        container.appendChild(textAreaContainer)
+        containerBG.appendChild(container)
+        containerBG.appendChild(navBar)
+
+        document.body.appendChild(containerBG)
+
+        resolve()
+    })
+    
+}
