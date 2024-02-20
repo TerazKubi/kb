@@ -20,8 +20,9 @@ function initTextArea(){
     return new Promise((res, rej) => {
         tinymce.init({
             selector: 'textarea#textArea',
-            width: 'inherit',
-            height: 700,
+            width: '100%',
+            height: '100%',
+            resize: false,
             plugins:[
                 'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
                 'searchreplace', 'wordcount', 'visualblocks', 'code', 'fullscreen', 'insertdatetime', 'media', 
@@ -197,13 +198,11 @@ function showAddNewNote(){
             containerBG.remove()
         })
 
-        const titleInputContainer = document.createElement('div')
-        titleInputContainer.classList.add('titleInputContainer')
-        titleInputContainer.innerHTML = "<input type='text'/>" 
+        navBar.appendChild(closeAddNote)
 
-        const tagsInputContainer = document.createElement('div')
-        tagsInputContainer.classList.add('tagsInputContainer')  
-        tagsInputContainer.innerHTML = "<input type='text'/>"
+        const titleContainer = initTitleContainer()
+        const tagsContainer = initTagsContainer()
+        
 
         const textAreaContainer = document.createElement('div')
         textAreaContainer.classList.add('textAreaContainer')
@@ -213,16 +212,59 @@ function showAddNewNote(){
 
         textAreaContainer.appendChild(textArea)
         
-        navBar.appendChild(closeAddNote)
-        container.appendChild(titleInputContainer)
-        container.appendChild(tagsInputContainer)
+        container.appendChild(titleContainer)
+        container.appendChild(tagsContainer)
         container.appendChild(textAreaContainer)
-        containerBG.appendChild(container)
+        
         containerBG.appendChild(navBar)
+        containerBG.appendChild(container)
 
         document.body.appendChild(containerBG)
 
         resolve()
     })
     
+}
+
+function initTitleContainer(){
+    const titleInputContainer = document.createElement('div')
+    titleInputContainer.classList.add('titleInputContainer')
+    titleInputContainer.innerHTML = "<span>Tytuł </span><input type='text'/>"
+
+    return titleInputContainer
+}
+
+function initTagsContainer(){
+    const tagsInputContainer = document.createElement('div')
+    tagsInputContainer.classList.add('tagsInputContainer')  
+
+    const containerTitle = document.createElement('div')
+    containerTitle.classList.add('tagsTitleContainer')
+
+    const tags = document.createElement('div')
+    tags.classList.add('tagsContainer')
+
+    const tagsInput = document.createElement('input')
+    tagsInput.setAttribute('id','tagsInput')
+
+    const addTagButton = document.createElement('button')
+    addTagButton.innerText = 'Dodaj'
+
+    addTagButton.addEventListener('click', () => {
+        const newTag = document.createElement('div')
+        newTag.addEventListener('click', () => { newTag.remove() })
+        newTag.innerText = tagsInput.value
+        tagsInput.value = ''
+
+        tags.appendChild(newTag)
+    })
+
+    tags.appendChild(tagsInput)
+    tags.appendChild(addTagButton)
+
+    tagsInputContainer.appendChild(containerTitle)
+    tagsInputContainer.appendChild(tags)
+
+
+    return tagsInputContainer
 }
