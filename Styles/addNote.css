@@ -51,6 +51,16 @@
     box-sizing: border-box;
     border: 1px solid green;
 }
+
+.tagsContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
+
+
+
 .textAreaContainer{
     width: 100%;
     flex: 1;

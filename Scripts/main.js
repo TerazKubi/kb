@@ -240,6 +240,7 @@ function initTagsContainer(){
 
     const containerTitle = document.createElement('div')
     containerTitle.classList.add('tagsTitleContainer')
+    containerTitle.innerText = 'Tagi'
 
     const tags = document.createElement('div')
     tags.classList.add('tagsContainer')
@@ -255,8 +256,9 @@ function initTagsContainer(){
         newTag.addEventListener('click', () => { newTag.remove() })
         newTag.innerText = tagsInput.value
         tagsInput.value = ''
+        tagsInput.focus()
 
-        tags.appendChild(newTag)
+        tags.insertBefore(newTag, tags.firstChild)
     })
 
     tags.appendChild(tagsInput)
