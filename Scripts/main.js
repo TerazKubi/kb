@@ -81,30 +81,7 @@ document.getElementById('downloadButton').addEventListener('click', async functi
     document.body.removeChild(downloadLink);
 });
 
-// button.addEventListener('click', () => {
-    
-//     // var contentFromTextarea = tinyMCE.activeEditor.getContent();
-    
-    
-//     // // Include stylesheets in the output div
-//     // var stylesheets = document.styleSheets;
-//     // console.log(stylesheets)
-//     // for (var i = 0; i < stylesheets.length; i++) {
-//     //         var stylesheet = stylesheets[i];
-//     //         var link = document.createElement('link');
-//     //         link.rel = 'stylesheet';
-//     //         link.href = stylesheet.href;
-//     //         output.appendChild(link);
-//     //     }
-        
-//     // output.innerHTML = contentFromTextarea;
 
-//     const toDelete = document.querySelector(".tox-promotion")
-//     console.log(toDelete)
-
-
-//     copyContent()
-// })
 
 addNoteButton.addEventListener('click', async () => {
     await showAddNewNote()
@@ -112,42 +89,41 @@ addNoteButton.addEventListener('click', async () => {
 })
 
 function copyContent() {
-    const editableContent = document.getElementById('default_ifr');
-    const textArea = document.createElement('textarea');
+    // const editableContent = document.getElementById('textArea_ifr');
+    // const textArea = document.createElement('textarea');
     
-    console.log(editableContent)
-    console.log(editableContent.outerHTML)
+    // console.log(editableContent)
+    // console.log(editableContent.outerHTML)
 
-    const iframe = document.getElementById('default_ifr');
+    const iframe = document.getElementById('textArea_ifr');
     if (iframe.contentDocument) {
         // Access the contentDocument and get the HTML content
         const iframeHTML = iframe.contentDocument.documentElement;
         const contentBody = iframeHTML.getElementsByTagName('body')
-        console.log(contentBody[0].innerHTML)
-        // Log or use the HTML content as needed
-        // console.log(iframeHTML);
-        output.innerHTML = contentBody[0].innerHTML
-        // You can also display it in an alert or use it in your application
-        // alert('Iframe HTML:\n' + iframeHTML);
+        // console.log(contentBody[0].innerHTML)
+        
+        // output.innerHTML = contentBody[0].innerHTML
+        return contentBody[0].innerHTML
+        
       }
 
 
-    // Copy HTML content to textarea
-    textArea.value = editableContent.innerHTML;
+    // // Copy HTML content to textarea
+    // textArea.value = editableContent.innerHTML;
     
-    // Append textarea to document
-    document.body.appendChild(textArea);
+    // // Append textarea to document
+    // document.body.appendChild(textArea);
 
-    // Select the content in the textarea
-    textArea.select();
+    // // Select the content in the textarea
+    // textArea.select();
     
-    // Execute copy command
-    document.execCommand('copy');
+    // // Execute copy command
+    // document.execCommand('copy');
 
-    // Remove the textarea
-    document.body.removeChild(textArea);
+    // // Remove the textarea
+    // document.body.removeChild(textArea);
     
-    console.log('Content copied!');
+    // console.log('Content copied!');
   }
 
 async function fetchData() {
@@ -198,6 +174,11 @@ function showAddNewNote(){
             containerBG.remove()
         })
 
+        const addButton = document.createElement('button')
+        addButton.innerText = 'save'
+        addButton.addEventListener('click', save)
+
+        navBar.appendChild(addButton)
         navBar.appendChild(closeAddNote)
 
         const titleContainer = initTitleContainer()
@@ -229,7 +210,7 @@ function showAddNewNote(){
 function initTitleContainer(){
     const titleInputContainer = document.createElement('div')
     titleInputContainer.classList.add('titleInputContainer')
-    titleInputContainer.innerHTML = "<span>Tytuł </span><input type='text'/>"
+    titleInputContainer.innerHTML = "<span>Tytuł </span><input type='text' class='inputTitle'/>"
 
     return titleInputContainer
 }
@@ -269,4 +250,36 @@ function initTagsContainer(){
 
 
     return tagsInputContainer
+}
+
+
+function save(){
+    const title = document.querySelector('.inputTitle')
+    const tagsContainer = document.querySelector('.tagsContainer')
+    const divs = tagsContainer.querySelectorAll('div')
+
+    
+
+
+    divsArray = Array.from(divs)
+
+    tags = divsArray.map((val, index, arr) => {return val.innerHTML} )
+
+    console.log(title.value)
+    console.log(divs)
+    console.log(tags)
+
+    
+
+    const data = copyContent()
+
+    console.log(data)
+
+    const object = {
+        title: title.value,
+        tags: tags,
+        text: data
+    } 
+
+    console.log(object)
 }
