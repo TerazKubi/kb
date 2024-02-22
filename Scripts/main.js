@@ -8,9 +8,10 @@ const newNoteContainer = document.querySelector(".blackBg")
 window.onload = async ()=>{
     // await initTextArea()
     
-    const data = await fetchData()
-    displayData(data.data)
-    // console.log(window.innerWidth)
+    // const data = await fetchData()
+    const data = await getDataFromStorage()
+    displayData(data)
+    // console.log(data)
 
     
 }
@@ -88,7 +89,7 @@ addNoteButton.addEventListener('click', async () => {
     await initTextArea()
 })
 
-function copyContent() {
+async function copyContent() {
     // const editableContent = document.getElementById('textArea_ifr');
     // const textArea = document.createElement('textarea');
     
@@ -99,31 +100,31 @@ function copyContent() {
     if (iframe.contentDocument) {
         // Access the contentDocument and get the HTML content
         const iframeHTML = iframe.contentDocument.documentElement;
-        const contentBody = iframeHTML.getElementsByTagName('body')
-        // console.log(contentBody[0].innerHTML)
+        const contentBody = iframeHTML.getElementsByTagName('body')[0]
+
+        const images = contentBody.getElementsByTagName('img')
+
+        // const reader = new FileReader()
+        // reader.onload = (event) => {
+        //     const base64string = event.target.result
+        //     return base64string
+        // }
+
+
+        for(const image of images){
+            console.log(image.src)
+            const b = await imageURLtoBlob(image.src)
+            console.log(b)
+            const base64str = await blobToBase64(b)
+            // console.log(base64str)
+            image.src = base64str
+        }
+
+        return contentBody.innerHTML
         
-        // output.innerHTML = contentBody[0].innerHTML
-        return contentBody[0].innerHTML
-        
-      }
+    }
 
 
-    // // Copy HTML content to textarea
-    // textArea.value = editableContent.innerHTML;
-    
-    // // Append textarea to document
-    // document.body.appendChild(textArea);
-
-    // // Select the content in the textarea
-    // textArea.select();
-    
-    // // Execute copy command
-    // document.execCommand('copy');
-
-    // // Remove the textarea
-    // document.body.removeChild(textArea);
-    
-    // console.log('Content copied!');
   }
 
 async function fetchData() {
@@ -133,6 +134,13 @@ async function fetchData() {
     } catch (error) {
         console.log(error);
     }
+}
+
+async function getDataFromStorage(){
+    return new Promise((res, rej) => {
+        const data = localStorage.getItem('data')
+        res(JSON.parse(data))
+    })
 }
 
 function displayData(data){
@@ -176,7 +184,20 @@ function showAddNewNote(){
 
         const addButton = document.createElement('button')
         addButton.innerText = 'save'
-        addButton.addEventListener('click', save)
+        addButton.addEventListener('click', async () => {
+            const data = await getDataFromTextArea()
+            console.log(data)
+
+            const localStorageData = localStorage.getItem('data') || null
+
+            if(!localStorageData) localStorage.setItem('data', JSON.stringify([data]))
+            else {
+                const tempData = localStorage.getItem('data')
+                const tempDataParsed = JSON.parse(tempData) 
+                tempDataParsed.push(data)
+                localStorage.setItem('data', JSON.stringify(tempDataParsed))
+            }
+        })
 
         navBar.appendChild(addButton)
         navBar.appendChild(closeAddNote)
@@ -253,7 +274,7 @@ function initTagsContainer(){
 }
 
 
-function save(){
+async function getDataFromTextArea(){
     const title = document.querySelector('.inputTitle')
     const tagsContainer = document.querySelector('.tagsContainer')
     const divs = tagsContainer.querySelectorAll('div')
@@ -271,15 +292,56 @@ function save(){
 
     
 
-    const data = copyContent()
+    const data = await copyContent()
 
-    console.log(data)
+    // console.log(data)
 
-    const object = {
+    return {
         title: title.value,
         tags: tags,
         text: data
     } 
 
-    console.log(object)
+    
+}
+
+async function imageURLtoBlob(url){
+    return new Promise(async (res, rej) => {
+        const response = await fetch(url)
+        const blob = await response.blob()
+
+        res(blob)
+    })
+
+    
+}
+
+function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+  
+      reader.onload = function(event) {
+        const base64String = event.target.result;
+        resolve(base64String);
+      };
+  
+      reader.onerror = function(error) {
+        reject(error);
+      };
+  
+      reader.readAsDataURL(blob);
+    });
+  }
+
+function createElement(tagName, classNames) {
+    const element = document.createElement(tagName);
+    element.classList.add(...classNames);
+    return element;
+}
+
+function createButton(text, classNames, clickHandler) {
+    const button = createContainer('button', classNames);
+    button.innerText = text;
+    button.addEventListener('click', clickHandler);
+    return button;
 }
