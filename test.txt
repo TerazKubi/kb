@@ -1,0 +1,70 @@
+function showAddNewNote() {
+    return new Promise((resolve, reject) => {
+        const containerBG = createContainer('div', ['blackBg']);
+        const container = createContainer('div', ['addNewNoteContainer']);
+        const navBar = createContainer('div', ['addNewNote-navbar']);
+        const closeAddNote = createContainer('div', ['addNewNote-close']);
+
+        closeAddNote.addEventListener('click', () => {
+            containerBG.remove();
+        });
+
+        const addButton = createButton('save', async () => {
+            const data = await getDataFromTextArea();
+            console.log(data);
+            updateLocalStorage(data);
+        });
+
+        navBar.appendChild(addButton);
+        navBar.appendChild(closeAddNote);
+
+        const titleContainer = initTitleContainer();
+        const tagsContainer = initTagsContainer();
+        const textAreaContainer = createContainer('div', ['textAreaContainer']);
+        const textArea = createTextArea('textArea');
+
+        textAreaContainer.appendChild(textArea);
+
+        container.appendChild(titleContainer);
+        container.appendChild(tagsContainer);
+        container.appendChild(textAreaContainer);
+
+        containerBG.appendChild(navBar);
+        containerBG.appendChild(container);
+        document.body.appendChild(containerBG);
+
+        resolve();
+    });
+}
+
+function createContainer(tagName, classNames) {
+    const element = document.createElement(tagName);
+    element.classList.add(...classNames);
+    return element;
+}
+
+function createButton(text, clickHandler) {
+    const button = createContainer('button', []);
+    button.innerText = text;
+    button.addEventListener('click', clickHandler);
+    return button;
+}
+
+function createTextArea(id) {
+    const textArea = createContainer('textarea', []);
+    textArea.setAttribute('id', id);
+    return textArea;
+}
+
+function updateLocalStorage(data) {
+    const localStorageData = localStorage.getItem('data') || null;
+
+    if (!localStorageData) {
+        localStorage.setItem('data', JSON.stringify([data]));
+    } else {
+        const tempData = localStorage.getItem('data');
+        const tempDataParsed = JSON.parse(tempData);
+        tempDataParsed.push(data);
+        localStorage.setItem('data', JSON.stringify(tempDataParsed));
+    }
+}
