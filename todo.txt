@@ -1,0 +1,7 @@
+edytowanie
+wyszukiwanie
+wczytywanie danych z pliku razem z local storage
+synchronizacja
+wyświetlanie notatki
+sliderek do zdjec
+customowy guzik w edytorze do kopiowania szybkiego
