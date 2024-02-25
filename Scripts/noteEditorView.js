@@ -1,4 +1,4 @@
-function showAddNewNoteAsync(){
+function showAddNewNoteAsync(note = null){
     return new Promise((resolve, reject) => {
         const containerBG = createElement('div', ['blackBg'])
 
@@ -8,11 +8,12 @@ function showAddNewNoteAsync(){
 
         const closeAddNote = createElement('div', ['addNewNote-close'])
         closeAddNote.addEventListener('click', () => {
+            destroyTextArea()
             containerBG.remove()
         })
 
-        const addButton = createButton('save', [], async () => {
-            const data = await getNewNoteObject()
+        const addButton = createButton((note)? "Zapisz" : "Dodaj", [], async () => {
+            const data = await getNoteObject()
             console.log(data)
 
             updateLocalStorage(data)
@@ -22,8 +23,8 @@ function showAddNewNoteAsync(){
         navBar.appendChild(addButton)
         navBar.appendChild(closeAddNote)
 
-        const titleContainer = initTitleContainer()
-        const tagsContainer = initTagsContainer()
+        const titleContainer = initTitleContainer(note?.title)
+        const tagsContainer = initTagsContainer(note?.tags)
         
 
         const textAreaContainer = document.createElement('div')
@@ -43,27 +44,34 @@ function showAddNewNoteAsync(){
 
         document.body.appendChild(containerBG)
 
+
         resolve()
     })
     
 }
 
-function initTitleContainer(){
+function initTitleContainer(title = null){
     const titleInputContainer = createElement('div', ['titleInputContainer'])
-    titleInputContainer.innerHTML = "<input type='text' class='inputTitle' placeholder='Tytuł'/>"
+    titleInputContainer.innerHTML = `<input type='text' class='inputTitle' value='${ title || "" }'placeholder='Tytuł'/>`
 
     return titleInputContainer
 }
 
-function initTagsContainer(){
+function initTagsContainer(tags = null){
     const tagsInputContainer = createElement('div', ['tagsContainer'])
 
-    const tags = createElement('div', ['tagsInputContainer'])
-    tags.innerHTML = `<ul id='tags'></ul>
+    const tagsContainer = createElement('div', ['tagsInputContainer'])
+    tagsContainer.innerHTML = `<ul id='tags'></ul>
         <input type='text' id='tagInput' placeholder='Dodaj tag'>
     `
-    const inputTag = tags.querySelector('#tagInput')
-    const tagsList = tags.querySelector('ul')
+    const inputTag = tagsContainer.querySelector('#tagInput')
+    const tagsList = tagsContainer.querySelector('ul')
+
+    if(tags){
+        tags.forEach(tag => {
+            addTag(tag, tagsList)
+        })
+    }
 
     inputTag.addEventListener('keydown', (event) => {
         if (event.key === "Enter" || event.key === ","){
@@ -83,7 +91,7 @@ function initTagsContainer(){
         }
     })
 
-    tagsInputContainer.appendChild(tags)
+    tagsInputContainer.appendChild(tagsContainer)
 
     return tagsInputContainer
 }
@@ -94,7 +102,7 @@ function addTag(text, parent){
     parent.appendChild(tag)
 }
 
-async function getNewNoteObject(){
+async function getNoteObject(){
     const title = document.querySelector('.inputTitle')
     const tagsContainer = document.querySelector('.tagsContainer')
     const divs = tagsContainer.querySelectorAll('li')

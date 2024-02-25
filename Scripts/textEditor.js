@@ -7,7 +7,7 @@
  *
  * @throws {Error} If there is an issue during the initialization process.
  */
-function initTextAreaAsync(){
+function initTextAreaAsync(noteBody = null){
     return new Promise((res, rej) => {
         tinymce.init({
             selector: 'textarea#textArea',
@@ -28,39 +28,16 @@ function initTextAreaAsync(){
             content_style: 'body{font-family:Helvetica,Arial,sans-serif; font-size:16px}',
             branding: false,
             setup: function (editor) {
-                
-
-                // editor.ui.registry.addButton('myButton', {
-                //     text: 'My btn',
-                //     onAction: () => {
-                //         var selectedText = editor.selection.getContent({format: 'text'})
-                //         // navigator.clipboard.writeText(selectedText);
-                //         // // Replace the selected text with something copyable
-                //         if(selectedText.trim() !== ''){
-                //             var wrappedText = '<span class="custom-highlight">' + selectedText + '</span>'
-
-                //             editor.selection.setContent(wrappedText)
-                //         }
-                        
-                //     }
-                // })
-                
-                 
-                editor.on('init', function () {          
+                editor.on('init', function () {       
+                    console.log('initialized texteditor')
+                    if(noteBody) editor.setContent(noteBody)  
                     const toDelete = document.querySelector(".tox-promotion")
                     toDelete.remove()
-
-                    // console.log(editor)
-                    // console.log(editor.formatter)
-                    // tinymce.activeEditor.formatter.register('mycustomformat', {
-                    //     inline: 'span',
-                    //     styles: {color: '#ff0000'}
-                    // });
+                    
                 })
-
-                
             }
         })
+        
         res()
     })
 }
@@ -91,4 +68,8 @@ async function getTextAreaContent() {
 
     return tmpDiv.innerHTML
 
+}
+
+function destroyTextArea(){
+    tinymce.activeEditor.destroy()
 }
