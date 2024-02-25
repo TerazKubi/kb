@@ -28,21 +28,37 @@ function initTextAreaAsync(){
             content_style: 'body{font-family:Helvetica,Arial,sans-serif; font-size:16px}',
             branding: false,
             setup: function (editor) {
-                editor.ui.registry.addButton('myButton', {
-                    text: 'My btn',
-                    onAction: () => {
-                        var selectedText = editor.selection.getContent();
-                        navigator.clipboard.writeText(selectedText);
-                        // Replace the selected text with something copyable
-                        var copyableText = '<span style="background-color: yellow;">' + selectedText + '</span>';
-                        editor.selection.setNode(editor.dom.createFragment(copyableText));
-                        editor.selection.collapse();
-                    }
-                })
+                
+
+                // editor.ui.registry.addButton('myButton', {
+                //     text: 'My btn',
+                //     onAction: () => {
+                //         var selectedText = editor.selection.getContent({format: 'text'})
+                //         // navigator.clipboard.writeText(selectedText);
+                //         // // Replace the selected text with something copyable
+                //         if(selectedText.trim() !== ''){
+                //             var wrappedText = '<span class="custom-highlight">' + selectedText + '</span>'
+
+                //             editor.selection.setContent(wrappedText)
+                //         }
+                        
+                //     }
+                // })
+                
+                 
                 editor.on('init', function () {          
                     const toDelete = document.querySelector(".tox-promotion")
                     toDelete.remove()
+
+                    // console.log(editor)
+                    // console.log(editor.formatter)
+                    // tinymce.activeEditor.formatter.register('mycustomformat', {
+                    //     inline: 'span',
+                    //     styles: {color: '#ff0000'}
+                    // });
                 })
+
+                
             }
         })
         res()
@@ -60,9 +76,9 @@ function initTextAreaAsync(){
  * @throws {Error} If an error occurs during image processing.
  */
 async function getTextAreaContent() {
-    const content = tinymce.activeEditor.getContent()
+    const content = tinymce.activeEditor.getBody()
     const tmpDiv = document.createElement('div')
-    tmpDiv.innerHTML = content
+    tmpDiv.innerHTML = content.innerHTML
     
     const images = tmpDiv.getElementsByTagName('img')
 

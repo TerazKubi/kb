@@ -50,7 +50,7 @@ async function getDataFromStorageAsync(){
     return new Promise((resolve, reject) => {
         const jsonData = localStorage.getItem('data')
         const dataParsed = JSON.parse(jsonData)
-        resolve(dataParsed)
+        resolve(dataParsed || [])
     })
 }
 

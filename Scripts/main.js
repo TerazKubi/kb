@@ -10,7 +10,7 @@ window.onload = async ()=>{
     // const data = await fetchData()
     const data = await getDataFromStorageAsync()
     displayData(data)
-  
+
 }
 
 addNoteButton.addEventListener('click', async () => {
@@ -54,7 +54,7 @@ function displayData(data){
         const newDiv = createElement('div', ['article'])
 
         newDiv.innerHTML = `
-            <div class='article-title'><h2>${element.title}</h2></div>
+            <div class='article-title'><h2>${element.title || ""}</h2></div>
             <div class='article-body'>
                 ${element.text || "No content"}
             </div>
