@@ -23,6 +23,8 @@ window.onload = async ()=>{
         confirmButtonColor: 'green'
     });
 
+    // https://sweetalert2.github.io/#configuration
+
 }
 
 addNoteButton.addEventListener('click', async () => {
