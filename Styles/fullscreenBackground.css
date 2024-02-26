@@ -1,0 +1,43 @@
+.fullscreen-container{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.755);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+ /* ================= Navbar ==================================================== */
+.fullscreen-navbar{
+    width: 100%;
+    height: 50px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    background-color: black;
+    display: flex;
+    justify-content: end;
+}
+.fullscreen-navbar-close-button{
+    width: 50px;
+    height: inherit;
+    border-left: 1px solid rgba(255, 255, 255, 0.39);
+}
+.fullscreen-navbar-close-button:hover{
+    cursor: pointer;
+    background-color: rgb(33, 33, 33);
+}
+
+/* ================== FS content container ======================================================= */
+
+
+.fullscreen-content-container{
+    flex: 1;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

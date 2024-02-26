@@ -1,27 +1,23 @@
 function showAddNewNoteAsync(note = null){
     return new Promise((resolve, reject) => {
-        const containerBG = createElement('div', ['blackBg'])
+        const FScontainer = createElement('div', ['fullscreen-container'])
+    
+        const navBar = createElement('div', ['fullscreen-navbar'])
 
-        const container = createElement('div', ['addNewNoteContainer'])
-        
-        const navBar = createElement('div', ['addNewNote-navbar'])
-
-        const closeAddNote = createElement('div', ['addNewNote-close'])
-        closeAddNote.addEventListener('click', () => {
+        const closeFullscreen = createElement('div', ['fullscreen-navbar-close-button'])
+        closeFullscreen.addEventListener('click', () => {
             destroyTextArea()
-            containerBG.remove()
+            FScontainer.remove()
         })
 
-        const addButton = createButton((note)? "Zapisz" : "Dodaj", [], async () => {
-            const data = await getNoteObject()
-            console.log(data)
-
-            updateLocalStorage(data)
-        }) 
+        const saveButton = createButton((note)? "Zapisz" : "Dodaj", [], ()=>saveNoteHandler(note))
         
+        navBar.appendChild(saveButton)
+        navBar.appendChild(closeFullscreen)
 
-        navBar.appendChild(addButton)
-        navBar.appendChild(closeAddNote)
+        const contentContainer = createElement('div', ['fullscreen-content-container'])
+
+        const editorContainer = createElement('div', ['editor-container'])
 
         const titleContainer = initTitleContainer(note?.title)
         const tagsContainer = initTagsContainer(note?.tags)
@@ -35,14 +31,16 @@ function showAddNewNoteAsync(note = null){
 
         textAreaContainer.appendChild(textArea)
         
-        container.appendChild(titleContainer)
-        container.appendChild(tagsContainer)
-        container.appendChild(textAreaContainer)
-        
-        containerBG.appendChild(navBar)
-        containerBG.appendChild(container)
+        editorContainer.appendChild(titleContainer)
+        editorContainer.appendChild(tagsContainer)
+        editorContainer.appendChild(textAreaContainer)
 
-        document.body.appendChild(containerBG)
+        contentContainer.appendChild(editorContainer)
+        
+        FScontainer.appendChild(navBar)
+        FScontainer.appendChild(contentContainer)
+
+        document.body.appendChild(FScontainer)
 
 
         resolve()
@@ -118,4 +116,50 @@ async function getNoteObject(){
         tags: tags,
         text: data
     } 
+}
+
+async function saveNoteHandler(note){
+    const noteData = await getNoteObject()
+    
+
+    if (noteData.title.trim() === "") {
+        showError("Musisz podać unikalny tytuł.")
+        return
+    }
+
+    if(note){
+        if(note.title !== noteData.title.trim()){
+            if(isDuplicate(noteData.title)){
+                showError("Notatka z takim tytułem już istnieje.")
+                return 
+            }
+        }
+        note.title = noteData.title
+        note.tags = noteData.tags
+        note.text = noteData.text
+        updateLocalStorage(data)
+    } else {
+        if(isDuplicate(noteData.title)){
+            showError("Notatka z takim tytułem już istnieje.")
+            return 
+        }
+        addToLocalStorage(noteData)
+    }
+
+    displayData(data, reversed=true)
+}
+
+
+function isDuplicate(noteTitle){
+    return data.some(item => item.title === noteTitle)
+}
+
+function showError(errorText){
+    Swal.fire({
+        title: 'Błąd 😒',
+        text: errorText,
+        icon: 'error',
+        confirmButtonColor: 'green',
+        confirmButtonText: 'Ok'
+    })
 }

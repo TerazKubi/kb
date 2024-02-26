@@ -54,14 +54,22 @@ async function getDataFromStorageAsync(){
     })
 }
 
-function updateLocalStorage(data) {
-    const localStorageData = localStorage.getItem('data') || null;
+function updateLocalStorage(dataArray) {
+    const dataArrayJSON = JSON.stringify(dataArray)
+    localStorage.setItem('data', dataArrayJSON)
+    // const localStorageData = localStorage.getItem('data') || null;
 
-    if (!localStorageData) {
-        localStorage.setItem('data', JSON.stringify([data]));
-    } else {
-        const localStorageDataParsed = JSON.parse(localStorageData);
-        localStorageDataParsed.push(data);
-        localStorage.setItem('data', JSON.stringify(localStorageDataParsed));
-    }
+    // if (!localStorageData) {
+    //     localStorage.setItem('data', JSON.stringify([data]));
+    // } else {
+    //     const localStorageDataParsed = JSON.parse(localStorageData);
+    //     localStorageDataParsed.push(data);
+    //     localStorage.setItem('data', JSON.stringify(localStorageDataParsed));
+    // }
+}
+
+function addToLocalStorage(noteData){
+    data.push(noteData)
+    console.log(data)
+    updateLocalStorage(data)
 }

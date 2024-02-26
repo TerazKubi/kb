@@ -78,3 +78,45 @@
     overflow-x: hidden;
     overflow-y: hidden;
 }
+
+
+
+.note-Container-FS{
+    width:90%;
+    background-color: white;
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+}
+
+
+.note-bodyContainer-FS{
+    padding-left: 10px;
+    padding-right: 10px;
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 7px;
+}
+
+  /* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 128, 0, 0.582); 
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 128, 0, 0.712); 
+}

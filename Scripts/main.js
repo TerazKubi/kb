@@ -13,15 +13,21 @@ window.onload = async ()=>{
     
     // const data = await fetchData()
     data = await getDataFromStorageAsync()
-    displayData(data)
+    displayData(data, reversed=true)
 
 
-    Swal.fire({
-        title: "Good job!",
-        text: "You clicked the button!",
-        icon: "success",
-        confirmButtonColor: 'green'
-    });
+    // Swal.fire({
+    //     title: "Good job!",
+    //     text: "You clicked the button!",
+    //     icon: "success",
+    //     confirmButtonColor: 'green'
+    // });
+    // Swal.fire({
+    //     title: 'Error!',
+    //     text: 'Do you want to continue',
+    //     icon: 'error',
+    //     confirmButtonText: 'Cool'
+    // })
 
     // https://sweetalert2.github.io/#configuration
 
@@ -74,14 +80,14 @@ function handleSearch() {
 
 
 
-function displayData(data){
-    mainContainer.innerHTML = ''
+function displayData(data, reversed = false) {
+    mainContainer.innerHTML = '';
 
-    data.forEach(element => {
-        
-        const card = createNoteCard(element)
-        
-        mainContainer.appendChild(card)
+    const displayArray = reversed ? data.toReversed() : data;
+
+    displayArray.forEach(element => {
+        const card = createNoteCard(element);
+        mainContainer.appendChild(card);
     });
 }
 
