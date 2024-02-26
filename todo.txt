@@ -1,7 +1,9 @@
-edytowanie
-wyszukiwanie
+
 wczytywanie danych z pliku razem z local storage
 synchronizacja
-wyświetlanie notatki
+
+synchronizacja danych z pliku i local storage 
+    jesli usuniemy jakas notatke z pliku a nie local storage
+
 sliderek do zdjec
 customowy guzik w edytorze do kopiowania szybkiego
