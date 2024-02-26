@@ -7,3 +7,5 @@ synchronizacja danych z pliku i local storage
 
 sliderek do zdjec
 customowy guzik w edytorze do kopiowania szybkiego
+
+dodanie popupow przy usuwaniu np i dodawaniu ze sukces
