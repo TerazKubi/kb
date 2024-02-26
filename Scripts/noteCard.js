@@ -95,9 +95,18 @@ function showNoteCardFS(noteData){
         await initTextAreaAsync(noteData.text)
         
     })
+    const removeButton = createElement('div', ['fullscreen-navbar-delete-button'])
+    removeButton.innerHTML = "<span style='color: white;'>del</span>"
+    removeButton.addEventListener('click', async ()=> {
+        data = data.filter(item => item.title !== noteData.title)
+        updateLocalStorage(data)
+        displayData(data, reversed=true)
+        FScontainer.remove()
+    })
 
     navBar.appendChild(closeFullscreen)
     navBar.appendChild(editButton)
+    navBar.appendChild(removeButton)
 
     const contentContainer = createElement('div', ['fullscreen-content-container'])
 
